@@ -81,6 +81,10 @@
       }
 
       /* custom styles */
+      html {
+        overflow-y: scroll;
+      }
+
       body {
         color: {color:Font};
         display: flex;
@@ -108,14 +112,15 @@
 
       /* posts */
       main#posts {
-        display: grid;
-        row-gap: 15px;
-        align-content: center;
+        display: flex;
+        flex-flow: column;
+        justify-content: center;
         margin-left: 40px;
       }
 
      .post {
         width: 500px;
+        margin: 10px 0;
         padding: 15px 20px;
         display: flex;
         flex-flow: column;
