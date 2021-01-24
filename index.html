@@ -1,0 +1,414 @@
+<html>
+  <!-- CREATED BY ALEX TAXIERA (alex.taxiera@gmail.com) -->
+  <head>
+    <!-- OPTIONS -->
+    <meta name="color:Background" content=""/>
+    <meta name="color:Link" content=""/>
+    <meta name="color:ImageBorder" content=""/>
+    <meta name="color:Font" content=""/>
+    <meta name="image:BackgroundImage" content=""/>
+    <meta name="image:SidebarImage" content=""/>
+    <meta name="text:BackgroundRepeat" content="repeat"/>
+    <meta name="text:Profile" content=""/>
+    <meta name="text:TimezoneName" content=""/>
+    <meta name="text:BirthDay" content=""/>
+    <meta name="text:BirthMonth" content=""/>
+    <meta name="text:BirthYear" content=""/>
+    <!-- NORMAL META -->
+    <title>{Title}</title>
+    <link rel="shortcut icon" href="{Favicon}">
+    <link rel="alternate" type="application/rss+xml" href="{RSS}">
+    {block:Description}
+      <meta name="description" content="{MetaDescription}" />
+    {/block:Description}
+    <!-- SEO for pagination -->
+    {block:PreviousPage}
+      <link rel="prev" href="{PreviousPage}">
+    {/block:PreviousPage}
+    {block:JumpPagination length="5"}
+      {block:CurrentPage}
+        <link rel="canonical" href="{URL}">
+      {/block:CurrentPage}
+    {/block:JumpPagination}
+    {block:NextPage}
+      <link rel="next" href="{NextPage}">
+    {/block:NextPage}
+    <!-- GOOGLE FONTS -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet"> 
+    <!-- ICONS -->
+    <script src="https://kit.fontawesome.com/8edc34154f.js" crossorigin="anonymous"></script>
+    <!-- DATES -->
+    <script src="https://moment.github.io/luxon/global/luxon.min.js"></script>
+
+    <style>
+      /* general style fixes */
+      * {
+        box-sizing: content-box;
+      }
+
+      body,
+      figure,
+      blockquote {
+        margin: 0;
+      }
+
+      ul,
+      ol {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      p:first-child {
+        margin-top: 0;
+      }
+
+      p:last-child {
+        margin-bottom: 0;
+      }
+
+      /* tumblr overrides */
+      .npf_row {
+        margin: unset !important; /* override tumblr row style */
+      }
+
+      .avatar_frame {
+        margin-right: 5px;
+      }
+
+      .tmblr-full > video {
+        height: unset !important;
+      }
+
+      /* custom styles */
+      body {
+        color: {color:Font};
+        display: flex;
+        justify-content: center;
+        font-family: Roboto, Arial, Helvetica, sans-serif;
+
+        background-image: url({image:BackgroundImage});
+        background-attachment: fixed;
+        background-repeat: {text:BackgroundRepeat};
+        background-color: {color:Background};
+      }
+
+      a:link,
+      a:visited {
+        color: {color:Link};
+      }
+
+      .glass {
+        background: #222222CC;
+      }
+
+      .uppercase {
+        text-transform: uppercase;
+      }
+
+      /* posts */
+      main#posts {
+        display: grid;
+        row-gap: 15px;
+        align-content: center;
+        margin-left: 40px;
+      }
+
+     .post {
+        width: 500px;
+        padding: 15px 20px;
+        display: flex;
+        flex-flow: column;
+      }
+
+      .post > .caption {
+        margin-top: 1em;
+      }
+
+      .post > footer > .metadata {
+        margin-top: 10px;
+        padding: 5px 0 0;
+        border-top: 1px solid #666;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .post > footer > .tags,
+      .post > footer > .notes {
+        margin-top: 20px;
+      }
+
+      .post > footer > .tags {
+        display: flex;
+        flex-flow: row wrap;
+        column-gap: 10px;
+      }
+
+      /* left sidebar */
+      side-bar {
+        height: 100vh;
+        width: 175px;
+        text-align: center;
+        display: flex;
+        flex-flow: column;
+        row-gap: 20px;
+        justify-content: center;
+        position: sticky;
+        top: 0;
+      }
+
+      /* sidebar image */
+      side-bar > .image {
+        height: 169px;
+        padding: 2px;
+        border: 1px solid {color:ImageBorder};
+        border-radius: 50%;
+      }
+
+      side-bar > .image > .inner-border {
+        height: 157px;
+        padding: 5px;
+        border: 1px solid {color:ImageBorder};
+        border-radius: 50%;
+        display: flex;
+      }
+
+      side-bar > .image > .inner-border > a {
+        height: 100%;
+        border-radius: 50%;
+        overflow: hidden;
+      }
+
+      /* sidebar content */
+      side-bar > .info {
+        padding: 15px 0;
+      }
+
+      side-bar > .info > nav {
+        display: flex;
+        justify-content: center;
+      }
+
+      side-bar > .info > nav > * {
+        padding: 0 5px;
+        margin: 15px 2px 0;
+      }
+    </style>
+    <!-- custom function for real age display -->
+    <script type="module">
+      const month = "{text:BirthMonth}"
+      const day  = "{text:BirthDay}"
+      const year = "{text:BirthYear}"
+      const zone = "{text:TimezoneName}"
+
+      const bday = luxon.DateTime.fromObject({ year, month, day }, { zone })
+
+      let now = luxon.DateTime.local()
+      now = now.plus({ hours: (bday.offset / 60) - (now.offset / 60) })
+
+      const age = now.diff(bday, 'years').toObject().years
+      const ageElement = document.getElementById('age')
+      if (ageElement) {
+        ageElement.textContent = Math.floor(age)
+      }
+    </script>
+  </head>
+  <body>
+    <side-bar>
+      <div class="image">
+        <div class="inner-border">
+          <a href="/">
+            <img src={image:SidebarImage} width="100%">
+          </a>
+        </div>
+      </div>
+      <div class="info glass">
+        <div>
+          {text:Profile}
+        </div>
+        <nav>
+          {block:PreviousPage}
+            <a href="{PreviousPage}">«</a>
+          {/block:PreviousPage}
+  
+          {block:JumpPagination length="5"}
+            {block:CurrentPage}
+              <span class="current_page">✗</span>
+            {/block:CurrentPage}
+            {block:JumpPage}
+              <a class="jump_page" href="{URL}">{PageNumber}</a>
+            {/block:JumpPage}
+          {/block:JumpPagination}
+  
+          {block:NextPage}
+            <a href="{NextPage}">»</a>
+          {/block:NextPage}
+        </nav>
+      </div>
+    </side-bar>
+    <main id="posts">
+      {block:Posts}
+        <article class="glass post">
+          {block:Text}
+            <!-- TEXT POST -->
+            {block:Title}
+              <header>
+                <h3>
+                  <a href="{Permalink}">
+                    {Title}
+                  </a>
+                </h3>
+              </header>
+            {/block:Title}
+            <main>
+              {Body}
+            </main>
+          {/block:Text}
+
+          {block:Photo}
+            <!-- PHOTO POST -->
+            <main>
+              <img src="{PhotoURL-500}" alt="{PhotoAlt}"/>
+              {block:Caption}
+                <div class="caption">
+                  {Caption}
+                </div>
+              {/block:Caption}
+            </main>
+          {/block:Photo}
+
+          {block:Panorama}
+            <!-- PANORAMA POST -->
+            <main>
+              {LinkOpenTag}
+                <img src="{PhotoURL-Panorama}" alt="{PhotoAlt}"/>
+              {LinkCloseTag}
+              {block:Caption}
+                <div class="caption">
+                  {Caption}
+                </div>
+              {/block:Caption}
+            </main>
+          {/block:Panorama}
+
+          {block:Photoset}
+            <!-- PHOTOSET POST -->
+            <main>
+              {Photoset-500}
+              {block:Caption}
+                <div class="caption">
+                  {Caption}
+                </div>
+              {/block:Caption}
+            </main>
+          {/block:Photoset}
+
+          {block:Quote}
+            <!-- QUOTE POST -->
+            <main>
+              "{Quote}"
+              {block:Source}
+                <div class="source">
+                  {Source}
+                </div>
+              {/block:Source}
+            </main>
+          {/block:Quote}
+
+          {block:Link}
+            <!-- LINK POST -->
+            <main>
+              <a href="{URL}" class="link" {Target}>
+                {Name}
+              </a>
+              {block:Description}
+                <div class="description">
+                  {Description}
+                </div>
+              {/block:Description}
+            </main>
+          {/block:Link}
+          
+          {block:Chat}
+            <!-- CHAT POST -->
+            {block:Title}
+            <header>
+              <h3>
+                <a href="{Permalink}">
+                  {Title}
+                </a>
+              </h3>
+            </header>
+            {/block:Title}
+            <main>
+              <ul class="chat">
+                {block:Lines}
+                  <li class="{Alt} user_{UserNumber}">
+                    {block:Label}
+                      <span class="label">
+                        {Label}
+                      </span>
+                    {/block:Label}
+                    {Line}
+                  </li>
+                {/block:Lines}
+              </ul>
+            </main>
+          {/block:Chat}
+
+          {block:Video}
+            <!-- VIDEO POST -->
+            <main>
+              {Video-500}
+              {block:Caption}
+                <div class="caption">
+                  {Caption}
+                </div>
+              {/block:Caption}
+            </main>
+          {/block:Video}
+
+          {block:Audio}
+            <!-- AUDIO POST -->
+            <main>
+              {AudioEmbed}
+              {block:Caption}
+                <div class="caption">
+                  {Caption}
+                </div>
+              {/block:Caption}
+            </main>
+          {/block:Audio}
+
+          <footer>
+            {block:Date}
+              <div class="metadata">
+                <div>
+                  <a href="{ReblogUrl}">Reblog</a>
+                  |
+                  <a href="{Permalink}">Link</a>
+                </div>
+                <div class="uppercase">
+                  {DayOfMonthWithZero}-{ShortMonth}-{Year}&nbsp;{24HourWithZero}:{Minutes}
+                </div>
+              </div>
+            {/block:Date}
+  
+            {block:PermalinkPage}
+              {block:HasTags}
+                <ul class="tags">
+                  {block:Tags}
+                    <li>
+                      <a href="{TagURL}">#{Tag}</a>
+                    </li>
+                    {/block:Tags}
+                </ul>
+              {/block:HasTags}
+              {PostNotes}
+            {/block:PermalinkPage}
+          </footer>
+        </article>
+      {/block:Posts}
+    </main>
+  </body>
+</html>
