@@ -2,19 +2,31 @@
   <!-- CREATED BY ALEX TAXIERA (alex.taxiera@gmail.com) -->
   <head>
     <!-- OPTIONS -->
-    <meta name="color:Background" content=""/>
-    <meta name="color:Link" content=""/>
-    <meta name="color:ImageBorder" content=""/>
-    <meta name="color:Font" content=""/>
-    <meta name="color:PostBackground" content="#222222" />
-    <meta name="image:BackgroundImage" content=""/>
-    <meta name="image:SidebarImage" content=""/>
-    <meta name="text:BackgroundRepeat" content="repeat"/>
-    <meta name="text:Profile" content=""/>
-    <meta name="text:TimezoneName" content=""/>
-    <meta name="text:BirthDay" content=""/>
-    <meta name="text:BirthMonth" content=""/>
-    <meta name="text:BirthYear" content=""/>
+    <meta name="color:Link Color" content="#CAE4F1"/>
+    <meta name="color:Font Color" content="#F5F5F5"/>
+    <meta name="color:Post Background Color" content="#222222"/>
+    <!-- background -->
+    <meta name="color:Background Color" content=""/>
+    <meta name="image:Background Image" content=""/>
+    <meta name="text:Background Repeat" content="repeat"/>
+    <!-- birthday -->
+    <meta name="text:Timezone Name" content=""/>
+    <meta name="text:Birth Day" content=""/>
+    <meta name="text:Birth Month" content=""/>
+    <meta name="text:Birth Year" content=""/>
+    <!-- sidebar -->
+    <meta name="color:Image Border Color" content="#F5F5F5"/>
+    <meta name="image:Sidebar Image" content=""/>
+    <meta name="text:Profile Text" content=""/>
+    <meta name="color:Nav Color" content=""/>
+    <meta name="if:Ask Link" content="1"/>
+    <!-- socials -->
+    <meta name="if:Socials In Profile" content="1"/>
+    <meta name="color:Socials Color" content="#F5F5F5"/>
+    <meta name="text:Twitter URL" content=""/>
+    <meta name="text:Instagram URL" content=""/>
+    <meta name="text:Tiktok URL" content=""/>
+    <meta name="text:YouTube URL" content=""/>
     <!-- NORMAL META -->
     <title>{Title}</title>
     <link rel="shortcut icon" href="{Favicon}">
@@ -38,7 +50,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet"> 
     <!-- ICONS -->
-    <script src="https://kit.fontawesome.com/8edc34154f.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+      const css = document.createElement('link')
+      css.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css'
+      css.rel = 'stylesheet'
+      css.type = 'text/css'
+      document.getElementsByTagName('head')[0].appendChild(css)
+    </script>
     <!-- DATES -->
     <script src="https://moment.github.io/luxon/global/luxon.min.js"></script>
 
@@ -87,24 +105,30 @@
       }
 
       body {
-        color: {color:Font};
         display: flex;
         justify-content: center;
         font-family: Roboto, Arial, Helvetica, sans-serif;
 
-        background-image: url({image:BackgroundImage});
         background-attachment: fixed;
-        background-repeat: {text:BackgroundRepeat};
-        background-color: {color:Background};
+        background-image: url({image:Background Image});
+        background-repeat: {text:Background Repeat};
+        background-color: {color:Background Color};
+        color: {color:Font Color};
       }
 
       a:link,
       a:visited {
-        color: {color:Link};
+        color: {color:Link Color};
+      }
+
+      a.icon-link {
+        font-size: 1.2em;
+        margin: 0 7px;
+        text-decoration: none;
       }
 
       .glass {
-        background: {color:PostBackground}CC;
+        background: {color:Post Background Color}CC;
       }
 
       .uppercase {
@@ -163,20 +187,30 @@
         top: 0;
       }
 
+      side-bar .socials a,
+      side-bar .socials a:link,
+      side-bar .socials a:visited {
+        color: {color:Socials Color};
+      }
+
+      side-bar .socials.in-profile a {
+        margin-bottom: 15px;
+      }
+
       /* sidebar image */
       side-bar > .image {
         height: 169px;
         padding: 2px;
-        border: 1px solid {color:ImageBorder};
         border-radius: 50%;
+        border: 1px solid {color:Image Border Color};
       }
 
       side-bar > .image > .inner-border {
         height: 157px;
-        padding: 5px;
-        border: 1px solid {color:ImageBorder};
-        border-radius: 50%;
         display: flex;
+        padding: 5px;
+        border-radius: 50%;
+        border: 1px solid {color:Image Border Color};
       }
 
       side-bar > .image > .inner-border > a {
@@ -191,64 +225,170 @@
       }
 
       side-bar > .info > nav {
+        margin-top: 25px;
+      }
+
+      side-bar > .info > nav > div {
         display: flex;
         justify-content: center;
       }
 
-      side-bar > .info > nav > * {
+      side-bar > .info > nav > #navigation > a {
+        color: {color:Nav Color};
+      }
+
+      side-bar > .info > nav > #pagination {
+        margin-top: 15px;
+      }
+
+      side-bar > .info > nav > #pagination > * {
         padding: 0 5px;
-        margin: 15px 2px 0;
+        margin: 0 2px;
       }
     </style>
     <!-- custom function for real age display -->
     <script type="module">
-      const month = "{text:BirthMonth}"
-      const day  = "{text:BirthDay}"
-      const year = "{text:BirthYear}"
-      const zone = "{text:TimezoneName}"
-
-      const bday = luxon.DateTime.fromObject({ year, month, day }, { zone })
-
-      let now = luxon.DateTime.local()
-      now = now.plus({ hours: (bday.offset / 60) - (now.offset / 60) })
-
-      const age = now.diff(bday, 'years').toObject().years
       const ageElement = document.getElementById('age')
       if (ageElement) {
-        ageElement.textContent = Math.floor(age)
+        let age = localStorage.getItem('age')
+
+        if (age) {
+          ageElement.textContent = age
+        }
+
+        const month = "{text:Birth Month}"
+        const day  = "{text:Birth Day}"
+        const year = "{text:Birth Year}"
+        const zone = "{text:Timezone Name}"
+  
+        const bday = luxon.DateTime.fromObject({ year, month, day }, { zone })
+  
+        let now = luxon.DateTime.local()
+        now = now.plus({ hours: (bday.offset / 60) - (now.offset / 60) })
+  
+        const age = Math.floor(now.diff(bday, 'years').toObject().years)
+        ageElement.textContent = age
+        localStorage.setItem('age', age)
       }
     </script>
+    <!-- function to hide socials if none are enabled -->
   </head>
   <body>
     <side-bar>
       <div class="image">
         <div class="inner-border">
           <a href="/">
-            <img src={image:SidebarImage} width="100%">
+            <img src={image:Sidebar Image} width="100%">
           </a>
         </div>
       </div>
+      {block:ifNotSocialsInProfile}
+        <div class="socials">
+          {block:ifTwitterURL}
+            <a
+              title="Twitter"
+              class="fab fa-twitter icon-link"
+              href="{text:Twitter URL}"
+            ></a>
+          {/block:ifTwitterURL}
+          {block:ifTiktokURL}
+            <a
+              title="Tiktok"
+              class="fab fa-tiktok icon-link"
+              href="{text:Tiktok URL}"
+            ></a>
+          {/block:ifTiktokURL}
+          {block:ifInstagramURL}
+            <a
+              title="Instagram"
+              class="fab fa-instagram icon-link"
+              href="{text:Instagram URL}"
+            ></a>
+          {/block:ifInstagramURL}
+          {block:ifYouTubeURL}
+            <a
+              title="YouTube"
+              class="fab fa-youtube icon-link"
+              href="{text:YouTube URL}"
+            ></a>
+          {/block:ifYouTubeURL}
+        </div>
+      {/block:ifNotSocialsInProfile}
       <div class="info glass">
+        {block:ifSocialsInProfile}
+          <div class="socials in-profile">
+            {block:ifTwitterURL}
+              <a
+                title="Twitter"
+                class="fab fa-twitter icon-link"
+                href="{text:Twitter URL}"
+              ></a>
+            {/block:ifTwitterURL}
+            {block:ifTiktokURL}
+              <a
+                title="Tiktok"
+                class="fab fa-tiktok icon-link"
+                href="{text:Tiktok URL}"
+              ></a>
+            {/block:ifTiktokURL}
+            {block:ifInstagramURL}
+              <a
+                title="Instagram"
+                class="fab fa-instagram icon-link"
+                href="{text:Instagram URL}"
+              ></a>
+            {/block:ifInstagramURL}
+            {block:ifYouTubeURL}
+              <a
+                title="YouTube"
+                class="fab fa-youtube icon-link"
+                href="{text:YouTube URL}"
+              ></a>
+            {/block:ifYouTubeURL}
+          </div>
+        {/block:ifSocialsInProfile}
         <div>
-          {text:Profile}
+          {text:Profile Text}
         </div>
         <nav>
-          {block:PreviousPage}
-            <a href="{PreviousPage}">«</a>
-          {/block:PreviousPage}
-  
-          {block:JumpPagination length="5"}
-            {block:CurrentPage}
-              <span class="current_page">✗</span>
-            {/block:CurrentPage}
-            {block:JumpPage}
-              <a class="jump_page" href="{URL}">{PageNumber}</a>
-            {/block:JumpPage}
-          {/block:JumpPagination}
-  
-          {block:NextPage}
-            <a href="{NextPage}">»</a>
-          {/block:NextPage}
+          <div id="navigation">
+            <a
+              class="fa fa-home icon-link"
+              href="/"
+            ></a>
+            {block:ifAskLink}
+              <a
+                class="fa fa-comment icon-link"
+                href="/ask"
+              ></a>
+            {/block:ifAskLink}
+            <a
+              class="fa fa-code icon-link"
+              target="_blank"
+              rel="noopener"
+              href="https://github.com/alex-taxiera/tumblr-theme"
+            ></a>
+          </div>
+          {block:Pagination}
+            <div id="pagination">
+              {block:PreviousPage}
+                <a href="{PreviousPage}">«</a>
+              {/block:PreviousPage}
+      
+              {block:JumpPagination length="5"}
+                {block:CurrentPage}
+                  <span class="current_page">✗</span>
+                {/block:CurrentPage}
+                {block:JumpPage}
+                  <a class="jump_page" href="{URL}">{PageNumber}</a>
+                {/block:JumpPage}
+              {/block:JumpPagination}
+      
+              {block:NextPage}
+                <a href="{NextPage}">»</a>
+              {/block:NextPage}
+            </div>
+          {/block:Pagination}
         </nav>
       </div>
     </side-bar>
