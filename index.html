@@ -143,12 +143,16 @@
         margin-left: 40px;
       }
 
-     .post {
-        width: 500px;
+      .post {
+        width: 540px;
         margin: 10px 0;
-        padding: 15px 20px;
+        padding: 15px 0;
         display: flex;
         flex-flow: column;
+      }
+
+      .post > * {
+        padding: 0 20px;
       }
 
       .post > main > .caption {
@@ -177,10 +181,13 @@
         height: auto;
       }
 
-      .post > footer > .metadata {
+      .post > footer {
         margin-top: 10px;
-        padding: 5px 0 0;
+        padding-top: 15px;
         border-top: 1px solid #666;
+      }
+
+      .post > footer > .metadata {
         display: flex;
         justify-content: space-between;
       }
