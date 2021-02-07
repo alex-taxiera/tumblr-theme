@@ -288,7 +288,7 @@
         let now = luxon.DateTime.local()
         now = now.plus({ hours: (bday.offset / 60) - (now.offset / 60) })
   
-        const age = Math.floor(now.diff(bday, 'years').toObject().years)
+        age = Math.floor(now.diff(bday, 'years').toObject().years)
         ageElement.textContent = age
         localStorage.setItem('age', age)
       }
